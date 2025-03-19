@@ -10,16 +10,21 @@
             color: #00FF00;
             font-family: 'Courier New', monospace;
             padding: 20px;
+            margin: 0;
         }
-        .console {
-            background-color: #111;
-            padding: 20px;
+        .terminal {
+            background-color: black;
+            color: #00FF00;
             border-radius: 5px;
             border: 1px solid #00FF00;
-            max-width: 800px;
+            padding: 20px;
+            height: 500px;
+            width: 80%;
+            max-width: 900px;
             margin: 0 auto;
-            height: 400px;
             overflow-y: auto;
+            font-size: 16px;
+            white-space: pre-wrap;
         }
         .input-field {
             color: white;
@@ -28,69 +33,101 @@
             outline: none;
             width: 100%;
             font-size: 16px;
-            margin-top: 10px;
             padding: 5px;
         }
         .btn {
-            background-color: #333;
-            color: white;
+            display: none;
+        }
+        .command-line {
+            display: flex;
+        }
+        .command-line input {
+            width: 90%;
             border: none;
-            padding: 5px 10px;
-            margin-top: 10px;
+            background-color: transparent;
+            color: #00FF00;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .command-line button {
+            background-color: transparent;
+            border: 1px solid #00FF00;
+            color: #00FF00;
+            padding: 5px;
             cursor: pointer;
             border-radius: 3px;
         }
-        .btn:hover {
+        .command-line button:hover {
             background-color: #00FF00;
-        }
-        #link {
-            color: #00FF00;
-            text-decoration: none;
+            color: black;
         }
     </style>
 </head>
 <body>
 
-    <div class="console" id="console">
-        <p>Welcome to JD System Security Terminal</p>
-        <p>Enter your username and password to access the system.</p>
-        <p>Link to the official website: <a href="http://killthelife.com" id="link" target="_blank">killthelife.com</a></p>
+    <div class="terminal" id="terminal">
+        <p>JD System Security Terminal - Initializing...</p>
+        <p>Type 'login' to start authentication.</p>
         <p id="status"></p>
     </div>
 
-    <input type="text" id="username" class="input-field" placeholder="Username (ID0304)" />
-    <input type="password" id="password" class="input-field" placeholder="Password (tacos)" />
-    <button class="btn" onclick="checkLogin()">Login</button>
-
-    <div class="console" id="filesConsole" style="display: none;">
-        <p>Accessing system files...</p>
-        <p>Loading surveillance data...</p>
-        <ul>
-            <li><a href="#">Camera Feed 1 - Surveillance Room</a></li>
-            <li><a href="#">Camera Feed 2 - Main Hall</a></li>
-            <li><a href="#">Camera Feed 3 - Back Alley</a></li>
-            <li><a href="#">log_001.txt - Security Log</a></li>
-            <li><a href="#">log_002.txt - User Activity</a></li>
-            <li><a href="#">log_003.txt - Unauthorized Access</a></li>
-        </ul>
+    <div class="command-line">
+        <input type="text" id="commandInput" class="input-field" placeholder="Enter command..." autofocus/>
+        <button onclick="executeCommand()">Execute</button>
     </div>
 
     <script>
-        function checkLogin() {
-            var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
-            var status = document.getElementById("status");
-            var filesConsole = document.getElementById("filesConsole");
+        let terminal = document.getElementById("terminal");
+        let commandInput = document.getElementById("commandInput");
+        let status = document.getElementById("status");
 
-            if (username === "ID0304" && password === "tacos") {
-                status.textContent = "Login successful. Accessing system files...";
-                setTimeout(function() {
-                    filesConsole.style.display = "block";
-                }, 1000); // Simulate loading delay
+        let isLoggedIn = false;
+
+        function executeCommand() {
+            let command = commandInput.value.trim();
+            commandInput.value = '';
+            terminal.innerHTML += `<p>USER: ${command}</p>`;
+
+            if (!isLoggedIn) {
+                if (command === 'login') {
+                    terminal.innerHTML += `<p>SYSTEM: Please enter your username and password.</p>`;
+                    terminal.innerHTML += `<p>SYSTEM: Usage: login <username> <password></p>`;
+                } else if (command === 'login ID0304 tacos') {
+                    terminal.innerHTML += `<p>SYSTEM: Login successful.</p>`;
+                    terminal.innerHTML += `<p>SYSTEM: Access granted to JD System Security.</p>`;
+                    isLoggedIn = true;
+                    showFiles();
+                } else {
+                    terminal.innerHTML += `<p>SYSTEM: Unknown command or incorrect login details.</p>`;
+                }
             } else {
-                status.textContent = "Invalid username or password. Please try again.";
-                status.style.color = "red";
+                if (command === 'show files') {
+                    showFiles();
+                } else if (command === 'exit') {
+                    terminal.innerHTML += `<p>SYSTEM: Logging out...</p>`;
+                    isLoggedIn = false;
+                    status.textContent = "Logged out. Please log in again.";
+                } else {
+                    terminal.innerHTML += `<p>SYSTEM: Unknown command.</p>`;
+                }
             }
+
+            terminal.scrollTop = terminal.scrollHeight; // Keep the scroll at the bottom
+        }
+
+        function showFiles() {
+            terminal.innerHTML += `
+                <p>SYSTEM: Accessing surveillance data...</p>
+                <ul>
+                    <li><a href="#">Camera Feed 1 - Surveillance Room</a></li>
+                    <li><a href="#">Camera Feed 2 - Main Hall</a></li>
+                    <li><a href="#">Camera Feed 3 - Back Alley</a></li>
+                    <li><a href="#">log_001.txt - Security Log</a></li>
+                    <li><a href="#">log_002.txt - User Activity</a></li>
+                    <li><a href="#">log_003.txt - Unauthorized Access</a></li>
+                </ul>
+                <p>SYSTEM: Type 'exit' to log out.</p>
+            `;
         }
     </script>
 </body>
