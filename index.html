@@ -114,9 +114,7 @@
             }
 
             terminal.scrollTop = terminal.scrollHeight; // Keep the scroll at the bottom
-            setTimeout(() => {
-                showInputLine();
-            }, 500);
+            showInputLine(); // Keep the input line visible
         }
 
         // Function to display a new input line with cursor blinking
