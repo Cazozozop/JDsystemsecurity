@@ -7,183 +7,149 @@
     <style>
         body {
             background-color: black;
-            color: white;
+            color: #00FF00;
             font-family: 'Courier New', monospace;
-            padding: 0;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .terminal {
-            background-color: black;
-            color: white;
-            border-radius: 5px;
-            border: 1px solid white;
             padding: 20px;
-            width: 80%;
-            max-width: 900px;
-            height: 500px;
+        }
+        .console {
+            background-color: #111;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #00FF00;
+            max-width: 100%;
+            height: 80vh;
             overflow-y: auto;
-            font-size: 16px;
             white-space: pre-wrap;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
-
-        .input-line {
-            display: flex;
-            width: 100%;
-        }
-
-        .input-line input {
-            background-color: black;
+        .input-field {
             color: white;
+            background-color: black;
             border: none;
             outline: none;
-            width: 80%;
+            width: 100%;
             font-size: 16px;
             padding: 5px;
-            margin: 0;
-            caret-color: white;
         }
-
-        .execute-btn {
+        .btn {
             background-color: #333;
             color: white;
             border: none;
             padding: 5px 10px;
+            margin-top: 10px;
             cursor: pointer;
-            margin-left: 10px;
-            font-size: 16px;
             border-radius: 3px;
-            transition: background-color 0.3s;
         }
-
-        .execute-btn:hover {
-            background-color: #555;
+        .btn:hover {
+            background-color: #00FF00;
         }
-
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 16px;
-            background-color: white;
-            animation: blink 0.8s infinite step-end;
-            margin-left: 3px;
+        #link {
+            color: #00FF00;
+            text-decoration: none;
         }
-
-        @keyframes blink {
-            0% { background-color: transparent; }
-            50% { background-color: white; }
-            100% { background-color: transparent; }
-        }
-
-        .bugged-text {
-            color: #ff0000;
-            font-family: monospace;
-        }
-
-        .ascii-art {
-            white-space: pre-wrap;
-            font-size: 12px;
-            color: #00ff00;
-            margin-top: 20px;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="terminal" id="terminal">
-        <p>JD System Security Terminal - Initializing...</p>
-        <p>Type 'login' to start authentication.</p>
+    <div class="console" id="console">
+        <p>Welcome to JD System Security Terminal</p>
+        <p>Enter your username and password to access the system.</p>
+        <p>Link to the official website: <a href="http://killthelife.com" id="link" target="_blank">killthelife.com</a></p>
         <p id="status"></p>
     </div>
 
-    <div class="input-line">
-        <input type="text" id="commandInput" placeholder="Enter command..." autofocus />
-        <button class="execute-btn" id="executeBtn">Exécuter</button>
+    <input type="text" id="username" class="input-field" placeholder="Username (ID0304)" />
+    <input type="password" id="password" class="input-field" placeholder="Password (tacos)" />
+    <button class="btn" onclick="checkLogin()">Login</button>
+
+    <div class="console hidden" id="commandConsole">
+        <p>Accessing system...</p>
+        <div>
+            <input type="text" id="commandInput" class="input-field" placeholder="Enter command..." />
+            <button class="btn" onclick="executeCommand()">Execute</button>
+        </div>
+    </div>
+
+    <div class="console hidden" id="executionConsole">
+        <p id="executionStatus">Command execution in progress...</p>
+    </div>
+
+    <div class="console hidden" id="filesConsole">
+        <p>Accessing system files...</p>
+        <p>Loading surveillance data...</p>
+        <ul>
+            <li><a href="#">Camera Feed 1 - Surveillance Room</a></li>
+            <li><a href="#">Camera Feed 2 - Main Hall</a></li>
+            <li><a href="#">Camera Feed 3 - Back Alley</a></li>
+            <li><a href="#">log_001.txt - Security Log</a></li>
+            <li><a href="#">log_002.txt - User Activity</a></li>
+            <li><a href="#">log_003.txt - Unauthorized Access</a></li>
+        </ul>
     </div>
 
     <script>
-        let terminal = document.getElementById("terminal");
-        let commandInput = document.getElementById("commandInput");
-        let executeBtn = document.getElementById("executeBtn");
-        let isLoggedIn = false;
+        function checkLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var status = document.getElementById("status");
+            var commandConsole = document.getElementById("commandConsole");
+
+            if (username === "ID0304" && password === "tacos") {
+                status.textContent = "Login successful. Accessing system...";
+                setTimeout(function() {
+                    document.getElementById("console").style.display = "none";
+                    commandConsole.classList.remove("hidden");
+                }, 1000); // Simulate login delay
+            } else {
+                status.textContent = "Invalid username or password. Please try again.";
+                status.style.color = "red";
+            }
+        }
 
         function executeCommand() {
-            let command = commandInput.value.trim();
-            commandInput.value = '';
-            terminal.innerHTML += `<p>USER: ${command}</p>`;
+            var commandInput = document.getElementById("commandInput").value;
+            var executionConsole = document.getElementById("executionConsole");
+            var executionStatus = document.getElementById("executionStatus");
 
-            if (!isLoggedIn) {
-                if (command === 'login') {
-                    terminal.innerHTML += `<p>SYSTEM: Please enter your username and password.</p>`;
-                    terminal.innerHTML += `<p>SYSTEM: Usage: login <username> <password></p>`;
-                } else if (command === 'login ID0304 tacos') {
-                    terminal.innerHTML += `<p>SYSTEM: Login successful.</p>`;
-                    terminal.innerHTML += `<p>SYSTEM: Access granted to JD System Security.</p>`;
-                    isLoggedIn = true;
-                    showInputLine();
-                } else {
-                    terminal.innerHTML += `<p>SYSTEM: Unknown command or incorrect login details.</p>`;
-                }
+            if (commandInput === "kill_the_life") {
+                executionStatus.textContent = "Executing command: kill_the_life...";
+                setTimeout(function() {
+                    executeBuggedText();
+                }, 1000);
             } else {
-                if (command === 'kill_the_life') {
-                    terminal.innerHTML += `<p class="bugged-text">ERROR: System malfunctioning...</p>`;
-                    simulateBuggedText();
-                } else if (command === 'exit') {
-                    terminal.innerHTML += `<p>SYSTEM: Logging out...</p>`;
-                    isLoggedIn = false;
-                    terminal.innerHTML += `<p>SYSTEM: Please log in again.</p>`;
-                } else {
-                    terminal.innerHTML += `<p>SYSTEM: Unknown command.</p>`;
-                }
+                executionStatus.textContent = "Unknown command.";
+            }
+        }
+
+        function executeBuggedText() {
+            var executionConsole = document.getElementById("executionConsole");
+            var textArea = "";
+            for (var i = 0; i < 100; i++) {
+                textArea += generateRandomText() + "\n";
             }
 
-            terminal.scrollTop = terminal.scrollHeight;
+            executionConsole.innerHTML = `<pre>${textArea}</pre>`;
+
+            setTimeout(function() {
+                showAsciiArt();
+            }, 2000);
         }
 
-        function showInputLine() {
-            terminal.innerHTML += `<p class="input-line">USER: <input type="text" id="commandInput" placeholder="Enter command..." autofocus><button class="execute-btn" id="executeBtn">Exécuter</button></p>`;
-            commandInput = document.getElementById("commandInput");
-            executeBtn = document.getElementById("executeBtn");
-            commandInput.focus();
+        function generateRandomText() {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+            var text = "";
+            for (var i = 0; i < 80; i++) {
+                text += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return text;
         }
 
-        function simulateBuggedText() {
-            let buggedMessages = [
-                "ERROR: System not responding...",
-                "FATAL: Corruption detected!",
-                "SYSTEM: Overflow at address 0xFF34...",
-                "WARNING: File corruption - access denied!",
-                "CRITICAL: Unexpected shutdown sequence initiated...",
-                "LOADING... SYSTEM FAILURE...",
-                "ERROR: Data stream interrupted...",
-                "WARNING: Memory dump..."
-            ];
-
-            let count = 0;
-
-            let bugInterval = setInterval(() => {
-                terminal.innerHTML += `<p class="bugged-text">${buggedMessages[count]}</p>`;
-                terminal.scrollTop = terminal.scrollHeight;
-                count++;
-
-                if (count === buggedMessages.length) {
-                    clearInterval(bugInterval);
-                    displayAsciiArt();
-                }
-            }, 100);
-        }
-
-        function displayAsciiArt() {
-            setTimeout(() => {
-                let asciiArt = `
+        function showAsciiArt() {
+            var executionConsole = document.getElementById("executionConsole");
+            var asciiArt = `
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -222,28 +188,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                `;
-
-                terminal.innerHTML += `<p class="ascii-art">${asciiArt}</p>`;
-                terminal.scrollTop = terminal.scrollHeight;
-                crashSite();
-            }, 2000);
+            `;
+            executionConsole.innerHTML += `<pre>${asciiArt}</pre>`;
+            setTimeout(function() {
+                executionConsole.innerHTML = "<pre>System Crash. Shutting down...</pre>";
+                document.body.style.backgroundColor = "black";
+                document.body.style.color = "red";
+            }, 5000); // Simulate crash delay
         }
-
-        function crashSite() {
-            setTimeout(() => {
-                terminal.innerHTML += `<p class="bugged-text">SYSTEM: Fatal Error - Crash imminent...</p>`;
-                terminal.scrollTop = terminal.scrollHeight;
-                setTimeout(() => {
-                    document.body.innerHTML = '<h1 style="color:red; text-align:center;">ERROR: SYSTEM CRASHED</h1>';
-                    document.body.style.backgroundColor = 'black';
-                    document.body.style.color = 'red';
-                }, 500);
-            }, 5000);
-        }
-
-        executeBtn.addEventListener('click', executeCommand);
-
     </script>
 
 </body>
