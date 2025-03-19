@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Secrète</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            font-family: monospace;
+            padding: 20px;
+        }
+        #console {
+            width: 100%;
+            height: 80vh;
+            background: black;
+            border: 1px solid lime;
+            padding: 10px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        input {
+            background: black;
+            border: none;
+            color: lime;
+            font-family: monospace;
+            width: 100%;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="console"></div>
+    <input type="text" id="input" autofocus>
+
+    <script>
+        const consoleDiv = document.getElementById("console");
+        const input = document.getElementById("input");
+        let step = 0;
+
+        function printToConsole(text) {
+            consoleDiv.innerHTML += text + "\n";
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        printToConsole("ID Utilisateur : ");
+        
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                let value = input.value;
+                input.value = "";
+                printToConsole(value);
+                
+                if (step === 0) {
+                    if (value === "ID0304") {
+                        step++;
+                        printToConsole("Mot de passe :");
+                    } else {
+                        printToConsole("Accès refusé.");
+                    }
+                } else if (step === 1) {
+                    if (value === "tacos") {
+                        step++;
+                        printToConsole("Accès autorisé. Chargement...");
+                        setTimeout(() => {
+                            printToConsole("Fichiers trouvés :");
+                            printToConsole("- secret_file.txt");
+                            printToConsole("- unknown_video.mp4");
+                            printToConsole("- log_0423.data");
+                            printToConsole("- hidden_message.txt");
+                            setTimeout(() => {
+                                printToConsole("Lecture des fichiers...");
+                                printToConsole("01010110 01100101 01110010 01101001 01100110 01101001 01100101 01100100");
+                                printToConsole("Data corrompue... Tentative de restauration...");
+                            }, 2000);
+                        }, 2000);
+                    } else {
+                        printToConsole("Accès refusé.");
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
