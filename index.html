@@ -146,7 +146,6 @@
             }
 
             terminal.scrollTop = terminal.scrollHeight;
-            showInputLine();
         }
 
         function showInputLine() {
@@ -244,14 +243,6 @@
         }
 
         executeBtn.addEventListener('click', executeCommand);
-
-        document.getElementById("commandInput").addEventListener("focus", function () {
-            cursor.style.display = 'inline-block';
-        });
-
-        setTimeout(() => {
-            showInputLine();
-        }, 500);
 
     </script>
 
