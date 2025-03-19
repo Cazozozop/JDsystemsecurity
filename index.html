@@ -11,6 +11,10 @@
             font-family: 'Courier New', monospace;
             padding: 0;
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         .terminal {
@@ -19,16 +23,16 @@
             border-radius: 5px;
             border: 1px solid white;
             padding: 20px;
-            height: 500px;
             width: 80%;
             max-width: 900px;
-            margin: 0 auto;
+            height: 500px;
             overflow-y: auto;
             font-size: 16px;
             white-space: pre-wrap;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .input-line {
@@ -41,11 +45,27 @@
             color: white;
             border: none;
             outline: none;
-            width: 100%;
+            width: 80%;
             font-size: 16px;
             padding: 5px;
             margin: 0;
             caret-color: white;
+        }
+
+        .execute-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .execute-btn:hover {
+            background-color: #555;
         }
 
         .cursor {
@@ -85,14 +105,14 @@
     </div>
 
     <div class="input-line">
-        <input type="text" id="commandInput" placeholder="Enter command..." autofocus/>
-        <div id="cursor" class="cursor"></div>
+        <input type="text" id="commandInput" placeholder="Enter command..." autofocus />
+        <button class="execute-btn" id="executeBtn">Exécuter</button>
     </div>
 
     <script>
         let terminal = document.getElementById("terminal");
         let commandInput = document.getElementById("commandInput");
-        let cursor = document.getElementById("cursor");
+        let executeBtn = document.getElementById("executeBtn");
         let isLoggedIn = false;
 
         function executeCommand() {
@@ -130,8 +150,9 @@
         }
 
         function showInputLine() {
-            terminal.innerHTML += `<p class="input-line">USER: <input type="text" id="commandInput" placeholder="Enter command..." autofocus><div class="cursor"></div></p>`;
+            terminal.innerHTML += `<p class="input-line">USER: <input type="text" id="commandInput" placeholder="Enter command..." autofocus><button class="execute-btn" id="executeBtn">Exécuter</button></p>`;
             commandInput = document.getElementById("commandInput");
+            executeBtn = document.getElementById("executeBtn");
             commandInput.focus();
         }
 
@@ -222,14 +243,10 @@
             }, 5000);
         }
 
+        executeBtn.addEventListener('click', executeCommand);
+
         document.getElementById("commandInput").addEventListener("focus", function () {
             cursor.style.display = 'inline-block';
-        });
-
-        commandInput.addEventListener("keypress", function (event) {
-            if (event.key === 'Enter') {
-                executeCommand();
-            }
         });
 
         setTimeout(() => {
