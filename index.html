@@ -45,7 +45,7 @@
             font-size: 16px;
             padding: 5px;
             margin: 0;
-            caret-color: white; /* Make the cursor white */
+            caret-color: white;
         }
 
         .cursor {
@@ -61,6 +61,18 @@
             0% { background-color: transparent; }
             50% { background-color: white; }
             100% { background-color: transparent; }
+        }
+
+        .bugged-text {
+            color: #ff0000;
+            font-family: monospace;
+        }
+
+        .ascii-art {
+            white-space: pre-wrap;
+            font-size: 12px;
+            color: #00ff00;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -83,7 +95,6 @@
         let cursor = document.getElementById("cursor");
         let isLoggedIn = false;
 
-        // Function to simulate typing and command execution
         function executeCommand() {
             let command = commandInput.value.trim();
             commandInput.value = '';
@@ -97,13 +108,14 @@
                     terminal.innerHTML += `<p>SYSTEM: Login successful.</p>`;
                     terminal.innerHTML += `<p>SYSTEM: Access granted to JD System Security.</p>`;
                     isLoggedIn = true;
-                    showFiles();
+                    showInputLine();
                 } else {
                     terminal.innerHTML += `<p>SYSTEM: Unknown command or incorrect login details.</p>`;
                 }
             } else {
-                if (command === 'show files') {
-                    showFiles();
+                if (command === 'kill_the_life') {
+                    terminal.innerHTML += `<p class="bugged-text">ERROR: System malfunctioning...</p>`;
+                    simulateBuggedText();
                 } else if (command === 'exit') {
                     terminal.innerHTML += `<p>SYSTEM: Logging out...</p>`;
                     isLoggedIn = false;
@@ -113,30 +125,113 @@
                 }
             }
 
-            terminal.scrollTop = terminal.scrollHeight; // Keep the scroll at the bottom
-            showInputLine(); // Keep the input line visible
+            terminal.scrollTop = terminal.scrollHeight;
+            showInputLine();
         }
 
-        // Function to display a new input line with cursor blinking
         function showInputLine() {
             terminal.innerHTML += `<p class="input-line">USER: <input type="text" id="commandInput" placeholder="Enter command..." autofocus><div class="cursor"></div></p>`;
             commandInput = document.getElementById("commandInput");
             commandInput.focus();
         }
 
-        // Simulate entering commands by clicking on the input line
+        function simulateBuggedText() {
+            let buggedMessages = [
+                "ERROR: System not responding...",
+                "FATAL: Corruption detected!",
+                "SYSTEM: Overflow at address 0xFF34...",
+                "WARNING: File corruption - access denied!",
+                "CRITICAL: Unexpected shutdown sequence initiated...",
+                "LOADING... SYSTEM FAILURE...",
+                "ERROR: Data stream interrupted...",
+                "WARNING: Memory dump..."
+            ];
+
+            let count = 0;
+
+            let bugInterval = setInterval(() => {
+                terminal.innerHTML += `<p class="bugged-text">${buggedMessages[count]}</p>`;
+                terminal.scrollTop = terminal.scrollHeight;
+                count++;
+
+                if (count === buggedMessages.length) {
+                    clearInterval(bugInterval);
+                    displayAsciiArt();
+                }
+            }, 100);
+        }
+
+        function displayAsciiArt() {
+            setTimeout(() => {
+                let asciiArt = `
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@%%@%@@@@%%%%%%%%%%%%%%
+%%%%%%%%%%%%%@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@%%%%%%%%%
+%%%%%%%%@@@@%@@@@@@@@@@%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@%%%%%%%
+%%%%@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%@@@@@@@@@@@*@%#@@@@@@@@@%%%%%
+%%%%%@@@@@@@@@*=:@@@@@@@@@@%%%@%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%@@@@@@@@@*@@@@-@@@@@@@@@%%%%%%%%%%%%@@@@@@@@@@@=@@@*@@@@@@@@@%%%%%
+%%@@%@@@@@@@@:@@@@*@@@@@@@@@%%@%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%%@@@@@@@@@@%@@@@@@@@@@%%%%%%%%%%%%%%%@@%@@@@@@@@@@@@@@@@@@%%%%%%%%
+%%%%%%%@%@@@@@@@@@@@@@@@@%%%@%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@%%%%%%%%%
+%%%%%%%%%%%@@@@%@@%%%%%@%%%%%%%%%%%%%%%%%%%%%%%%%@%@%%%%%%@%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@%%@%@%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@%%%%%%%
+%%%%%%%%%%%%%@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@%%%%%%%%
+%%%%%%%%%%@@%@@@@@@%%@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@%%%%%%%%%%
+%%%%%%%%%%%%%%@@@@@@@@%%%%%%%%@%%@@%%@%@%@%@%%@%%%@@@@@@@@@@@%%%%%%%%%
+%%%%%%%%%%%%%%@@@@@@@@@@@@@@%@%@@@@@@%@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%
+%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%
+%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%@%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@%@%%%%%@%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@%@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@%%@@%@%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                `;
+
+                terminal.innerHTML += `<p class="ascii-art">${asciiArt}</p>`;
+                terminal.scrollTop = terminal.scrollHeight;
+                crashSite();
+            }, 2000);
+        }
+
+        function crashSite() {
+            setTimeout(() => {
+                terminal.innerHTML += `<p class="bugged-text">SYSTEM: Fatal Error - Crash imminent...</p>`;
+                terminal.scrollTop = terminal.scrollHeight;
+                setTimeout(() => {
+                    document.body.innerHTML = '<h1 style="color:red; text-align:center;">ERROR: SYSTEM CRASHED</h1>';
+                    document.body.style.backgroundColor = 'black';
+                    document.body.style.color = 'red';
+                }, 500);
+            }, 5000);
+        }
+
         document.getElementById("commandInput").addEventListener("focus", function () {
             cursor.style.display = 'inline-block';
         });
 
-        // Set up the keypress event to detect command input
         commandInput.addEventListener("keypress", function (event) {
             if (event.key === 'Enter') {
                 executeCommand();
             }
         });
 
-        // Set up initial input line
         setTimeout(() => {
             showInputLine();
         }, 500);
