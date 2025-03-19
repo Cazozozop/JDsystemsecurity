@@ -7,16 +7,17 @@
     <style>
         body {
             background-color: black;
-            color: #00FF00;
+            color: white;
             font-family: 'Courier New', monospace;
-            padding: 20px;
+            padding: 0;
             margin: 0;
         }
+
         .terminal {
             background-color: black;
-            color: #00FF00;
+            color: white;
             border-radius: 5px;
-            border: 1px solid #00FF00;
+            border: 1px solid white;
             padding: 20px;
             height: 500px;
             width: 80%;
@@ -25,41 +26,41 @@
             overflow-y: auto;
             font-size: 16px;
             white-space: pre-wrap;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
         }
-        .input-field {
-            color: white;
+
+        .input-line {
+            display: flex;
+            width: 100%;
+        }
+
+        .input-line input {
             background-color: black;
+            color: white;
             border: none;
             outline: none;
             width: 100%;
             font-size: 16px;
             padding: 5px;
+            margin: 0;
+            caret-color: white; /* Make the cursor white */
         }
-        .btn {
-            display: none;
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 16px;
+            background-color: white;
+            animation: blink 0.8s infinite step-end;
+            margin-left: 3px;
         }
-        .command-line {
-            display: flex;
-        }
-        .command-line input {
-            width: 90%;
-            border: none;
-            background-color: transparent;
-            color: #00FF00;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        .command-line button {
-            background-color: transparent;
-            border: 1px solid #00FF00;
-            color: #00FF00;
-            padding: 5px;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        .command-line button:hover {
-            background-color: #00FF00;
-            color: black;
+
+        @keyframes blink {
+            0% { background-color: transparent; }
+            50% { background-color: white; }
+            100% { background-color: transparent; }
         }
     </style>
 </head>
@@ -71,18 +72,18 @@
         <p id="status"></p>
     </div>
 
-    <div class="command-line">
-        <input type="text" id="commandInput" class="input-field" placeholder="Enter command..." autofocus/>
-        <button onclick="executeCommand()">Execute</button>
+    <div class="input-line">
+        <input type="text" id="commandInput" placeholder="Enter command..." autofocus/>
+        <div id="cursor" class="cursor"></div>
     </div>
 
     <script>
         let terminal = document.getElementById("terminal");
         let commandInput = document.getElementById("commandInput");
-        let status = document.getElementById("status");
-
+        let cursor = document.getElementById("cursor");
         let isLoggedIn = false;
 
+        // Function to simulate typing and command execution
         function executeCommand() {
             let command = commandInput.value.trim();
             commandInput.value = '';
@@ -106,29 +107,43 @@
                 } else if (command === 'exit') {
                     terminal.innerHTML += `<p>SYSTEM: Logging out...</p>`;
                     isLoggedIn = false;
-                    status.textContent = "Logged out. Please log in again.";
+                    terminal.innerHTML += `<p>SYSTEM: Please log in again.</p>`;
                 } else {
                     terminal.innerHTML += `<p>SYSTEM: Unknown command.</p>`;
                 }
             }
 
             terminal.scrollTop = terminal.scrollHeight; // Keep the scroll at the bottom
+            setTimeout(() => {
+                showInputLine();
+            }, 500);
         }
 
-        function showFiles() {
-            terminal.innerHTML += `
-                <p>SYSTEM: Accessing surveillance data...</p>
-                <ul>
-                    <li><a href="#">Camera Feed 1 - Surveillance Room</a></li>
-                    <li><a href="#">Camera Feed 2 - Main Hall</a></li>
-                    <li><a href="#">Camera Feed 3 - Back Alley</a></li>
-                    <li><a href="#">log_001.txt - Security Log</a></li>
-                    <li><a href="#">log_002.txt - User Activity</a></li>
-                    <li><a href="#">log_003.txt - Unauthorized Access</a></li>
-                </ul>
-                <p>SYSTEM: Type 'exit' to log out.</p>
-            `;
+        // Function to display a new input line with cursor blinking
+        function showInputLine() {
+            terminal.innerHTML += `<p class="input-line">USER: <input type="text" id="commandInput" placeholder="Enter command..." autofocus><div class="cursor"></div></p>`;
+            commandInput = document.getElementById("commandInput");
+            commandInput.focus();
         }
+
+        // Simulate entering commands by clicking on the input line
+        document.getElementById("commandInput").addEventListener("focus", function () {
+            cursor.style.display = 'inline-block';
+        });
+
+        // Set up the keypress event to detect command input
+        commandInput.addEventListener("keypress", function (event) {
+            if (event.key === 'Enter') {
+                executeCommand();
+            }
+        });
+
+        // Set up initial input line
+        setTimeout(() => {
+            showInputLine();
+        }, 500);
+
     </script>
+
 </body>
 </html>
