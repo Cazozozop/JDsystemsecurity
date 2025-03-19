@@ -1,88 +1,97 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JD System Security</title>
+    <title>JD System Security - Kill The Life</title>
     <style>
         body {
             background-color: black;
-            color: lime;
-            font-family: monospace;
+            color: #00FF00;
+            font-family: 'Courier New', monospace;
             padding: 20px;
-            overflow: hidden;
         }
-        #console {
-            width: 100%;
-            height: 80vh;
-            background: black;
-            border: 1px solid lime;
-            padding: 10px;
+        .console {
+            background-color: #111;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #00FF00;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 400px;
             overflow-y: auto;
-            white-space: pre-wrap;
         }
-        #inputField {
-            width: 100%;
-            background: black;
-            border: 1px solid lime;
-            color: lime;
-            font-family: monospace;
-            padding: 5px;
+        .input-field {
+            color: white;
+            background-color: black;
+            border: none;
             outline: none;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+            padding: 5px;
+        }
+        .btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .btn:hover {
+            background-color: #00FF00;
+        }
+        #link {
+            color: #00FF00;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div id="console"></div>
-    <input type="text" id="inputField" autofocus>
+
+    <div class="console" id="console">
+        <p>Welcome to JD System Security Terminal</p>
+        <p>Enter your username and password to access the system.</p>
+        <p>Link to the official website: <a href="http://killthelife.com" id="link" target="_blank">killthelife.com</a></p>
+        <p id="status"></p>
+    </div>
+
+    <input type="text" id="username" class="input-field" placeholder="Username (ID0304)" />
+    <input type="password" id="password" class="input-field" placeholder="Password (tacos)" />
+    <button class="btn" onclick="checkLogin()">Login</button>
+
+    <div class="console" id="filesConsole" style="display: none;">
+        <p>Accessing system files...</p>
+        <p>Loading surveillance data...</p>
+        <ul>
+            <li><a href="#">Camera Feed 1 - Surveillance Room</a></li>
+            <li><a href="#">Camera Feed 2 - Main Hall</a></li>
+            <li><a href="#">Camera Feed 3 - Back Alley</a></li>
+            <li><a href="#">log_001.txt - Security Log</a></li>
+            <li><a href="#">log_002.txt - User Activity</a></li>
+            <li><a href="#">log_003.txt - Unauthorized Access</a></li>
+        </ul>
+    </div>
 
     <script>
-        const consoleDiv = document.getElementById("console");
-        const inputField = document.getElementById("inputField");
-        let step = 0;
+        function checkLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var status = document.getElementById("status");
+            var filesConsole = document.getElementById("filesConsole");
 
-        function printToConsole(text) {
-            consoleDiv.innerHTML += text + "\n";
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        }
-
-        printToConsole("ID Utilisateur : ");
-        
-        inputField.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                let value = inputField.value;
-                inputField.value = "";
-                printToConsole(value);
-                
-                if (step === 0) {
-                    if (value === "ID0304") {
-                        step++;
-                        printToConsole("Mot de passe :");
-                    } else {
-                        printToConsole("Accès refusé.");
-                    }
-                } else if (step === 1) {
-                    if (value === "tacos") {
-                        step++;
-                        printToConsole("Accès autorisé. Chargement...");
-                        setTimeout(() => {
-                            printToConsole("Fichiers trouvés :");
-                            printToConsole("- secret_file.txt");
-                            printToConsole("- unknown_video.mp4");
-                            printToConsole("- log_0423.data");
-                            printToConsole("- hidden_message.txt");
-                            setTimeout(() => {
-                                printToConsole("Lecture des fichiers...");
-                                printToConsole("01010110 01100101 01110010 01101001 01100110 01101001 01100101 01100100");
-                                printToConsole("Data corrompue... Tentative de restauration...");
-                            }, 2000);
-                        }, 2000);
-                    } else {
-                        printToConsole("Accès refusé.");
-                    }
-                }
+            if (username === "ID0304" && password === "tacos") {
+                status.textContent = "Login successful. Accessing system files...";
+                setTimeout(function() {
+                    filesConsole.style.display = "block";
+                }, 1000); // Simulate loading delay
+            } else {
+                status.textContent = "Invalid username or password. Please try again.";
+                status.style.color = "red";
             }
-        });
+        }
     </script>
 </body>
 </html>
