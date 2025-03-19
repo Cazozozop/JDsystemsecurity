@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Console Secrète</title>
+    <title>JD System Security</title>
     <style>
         body {
             background-color: black;
             color: lime;
             font-family: monospace;
             padding: 20px;
+            overflow: hidden;
         }
         #console {
             width: 100%;
@@ -20,23 +21,24 @@
             overflow-y: auto;
             white-space: pre-wrap;
         }
-        input {
+        #inputField {
+            width: 100%;
             background: black;
-            border: none;
+            border: 1px solid lime;
             color: lime;
             font-family: monospace;
-            width: 100%;
+            padding: 5px;
             outline: none;
         }
     </style>
 </head>
 <body>
     <div id="console"></div>
-    <input type="text" id="input" autofocus>
+    <input type="text" id="inputField" autofocus>
 
     <script>
         const consoleDiv = document.getElementById("console");
-        const input = document.getElementById("input");
+        const inputField = document.getElementById("inputField");
         let step = 0;
 
         function printToConsole(text) {
@@ -46,10 +48,10 @@
 
         printToConsole("ID Utilisateur : ");
         
-        input.addEventListener("keydown", function(event) {
+        inputField.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
-                let value = input.value;
-                input.value = "";
+                let value = inputField.value;
+                inputField.value = "";
                 printToConsole(value);
                 
                 if (step === 0) {
