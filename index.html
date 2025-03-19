@@ -69,7 +69,7 @@
         <p>Accessing system...</p>
         <div>
             <input type="text" id="commandInput" class="input-field" placeholder="Enter command..." />
-            <button class="btn" onclick="executeCommand()">Execute</button>
+            <button class="btn" id="executeBtn">Execute</button>
         </div>
     </div>
 
@@ -91,6 +91,7 @@
     </div>
 
     <script>
+        // Fonction de connexion
         function checkLogin() {
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
@@ -109,6 +110,7 @@
             }
         }
 
+        // Fonction d'exécution des commandes
         function executeCommand() {
             var commandInput = document.getElementById("commandInput").value;
             var executionConsole = document.getElementById("executionConsole");
@@ -118,12 +120,13 @@
                 executionStatus.textContent = "Executing command: kill_the_life...";
                 setTimeout(function() {
                     executeBuggedText();
-                }, 1000);
+                }, 1000); // Simule un délai avant l'exécution
             } else {
                 executionStatus.textContent = "Unknown command.";
             }
         }
 
+        // Fonction pour générer du texte buggy
         function executeBuggedText() {
             var executionConsole = document.getElementById("executionConsole");
             var textArea = "";
@@ -135,9 +138,10 @@
 
             setTimeout(function() {
                 showAsciiArt();
-            }, 2000);
+            }, 2000); // Affiche l'ASCII art après un délai
         }
 
+        // Fonction pour générer du texte aléatoire
         function generateRandomText() {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
             var text = "";
@@ -147,6 +151,7 @@
             return text;
         }
 
+        // Fonction pour afficher l'art ASCII
         function showAsciiArt() {
             var executionConsole = document.getElementById("executionConsole");
             var asciiArt = `
@@ -194,8 +199,11 @@
                 executionConsole.innerHTML = "<pre>System Crash. Shutting down...</pre>";
                 document.body.style.backgroundColor = "black";
                 document.body.style.color = "red";
-            }, 5000); // Simulate crash delay
+            }, 5000); // Simule un crash du système après un délai
         }
+
+        // Ajoute un événement au bouton "Execute"
+        document.getElementById("executeBtn").addEventListener("click", executeCommand);
     </script>
 
 </body>
